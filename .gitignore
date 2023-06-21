@@ -1,0 +1,3 @@
+__pycache__/
+*secrs.py
+*.sqlite3
