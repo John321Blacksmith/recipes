@@ -37,6 +37,10 @@ INSTALLED_APPS = [
 
     # 3rd party apps
     'rest_framework',
+    # for handling tokenized & session authentication
+    'rest_framework.authtoken',
+    # authentication handler
+    'dj_rest_auth',
 
     # default apps
     'django.contrib.admin',
@@ -133,6 +137,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # drf settings
-
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+}
 
 # cors settings

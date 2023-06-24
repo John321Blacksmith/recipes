@@ -16,6 +16,9 @@ class Recipe(models.Model):
 	instruction = models.TextField()
 	author = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE)
 
+	def __str__(self):
+		return self.title
+
 
 
 class Comment(models.Model):
@@ -28,3 +31,6 @@ class Comment(models.Model):
 	recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE) 
 	content = models.TextField()
 	date = models.DateTimeField(auto_now_add=True)
+
+	def __str__(self):
+		return self.content[:40]
