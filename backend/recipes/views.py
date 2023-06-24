@@ -1,38 +1,33 @@
-from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework import generics
-from rest_framework.parsers import JSONParser
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from .models import Recipe, Comment
 from .serializers import RecipeSerializer, CommentSerializer
 # Create your views here.
 
 
-# The views below facilitate
-# both collection & object API endpoints
-# of recipes.
-class RecipeList(generics.ListCreateAPIView):
-	queryset = Recipe.objects.all()
-	serializer_class = RecipeSerializer
+@api_view(['GET', 'POST'])
+def recipe_list(request, format=None):
+	"""
+	This view performs extraction
+	of all the recipes from the DB.
+	"""
+
+	if request.method == 'GET':
+		recipes = Recipe.objects.all()
+		serializer = RecipeSerializer(recipes, many=True)
+		return Response(serializer.data)
+
+	elif request.method == 'POST':
+		serializer = RecipeSerializer(data=request.data)
+		if serializer.is_valid():
+			serializer.save()
+			return Response(serializer.data, status.HTTP_201_CREATED)
+		return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
 
-# class RecipeDetail(generics.RetrieveUpdateDestroyAPIView):
-# 	queryset = Recipe.objects.all()
-# 	serializer_class = RecipeSerializer
-
-
-# The view below facilitates
-# collection API endpoints
-# of comments.
-# class CommentList(generics.ListCreateAPIView):
-# 	serializer_class = CommentSerializer
-
-# 	def get_queryset(self):
-# 		"""
-# 		Get only related comments.
-# 		"""
-
-@csrf_exempt
-def recipe_detail(request, pk):
+@api_view(['GET', 'PUT', 'DELETE'])
+def recipe_detail(request, pk, format=None):
 	"""
 	This view uses a parsed index
 	of each pecipe and facilitates
@@ -41,26 +36,33 @@ def recipe_detail(request, pk):
 	try:
 		recipe = Recipe.objects.get(pk=pk)
 	except Recipe.DoesNotExist:
-		return HttpResponse(status=404)
+		return Response(status.HTTP_404_NOT_FOUND)
 
 	if request.method == 'GET':
 		serializer = RecipeSerializer(recipe)
-		return JsonResponse(serializer.data, status=200)
+		return Response(serializer.data)
 
 	elif request.method == 'PUT':
-		data = JSONParser().parse(request)
-		serializer = RecipeSerializer(data=data)
-		if serializer.is_valid():
-			serializer.save()
-			return JsonResponse(serializer.data, status=201)
+		if request.user == recipe.author or request.user.is_staff:
+			serializer = RecipeSerializer(data=request.data)
+			if serializer.is_valid():
+				serializer.save()
+				return Response(serializer.data, status.HTTP_201_CREATED)
+			return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+		else:
+			return Response(status.HTTP_403_FORBIDDEN)
+		
 
 	elif request.method == 'DELETE':
-		recipe.delete()
-		return HttpResponse(status=204)
+		if request.user == recipe.author:
+			recipe.delete()
+			return Response(status.HTTP_204_NO_CONTENT)
+		else:
+			return Response(status.HTTP_403_FORBIDDEN)
 
 		
-@csrf_exempt
-def recipe_comments(request, pk):
+@api_view(['GET', 'POST'])
+def recipe_comments(request, pk, format=None):
 	"""
 	This view parses the request to
 	a collection api endpoint and uses
@@ -71,20 +73,16 @@ def recipe_comments(request, pk):
 	try:
 		recipe = Recipe.objects.get(pk=pk)
 	except Recipe.DoesNotExist:
-		return HttpResponse(status=404)
+		return Response(status.HTTP_404_NOT_FOUND)
 
 	if request.method == 'GET':
 		comments = recipe.comment_set.all()
 		serializer = CommentSerializer(comments, many=True)
-		return JsonResponse(serializer.data, safe=False)
+		return Response(serializer.data)
 
-	elif request.method == 'PUT':
-		data = JSONParser().parse(request)
-		serializer = CommentSerializer(data=data)
+	elif request.method == 'POST':
+		serializer = CommentSerializer(data=request.data)
 		if serializer.is_valid():
 			serializer.save()
-			return JsonResponse(serializer.data, status=201)
-
-	elif request.method == 'DELETE':
-		recipe.delete()
-		return HttpResponse(status=204)
+			return Response(serializer.data, status.HTTP_201_CREATED)
+		return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
