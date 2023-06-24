@@ -10,6 +10,6 @@ app_name = 'recipes'
 
 urlpatterns = [
 	path('recipes/', views.RecipeList.as_view()),
-	path('recipes/<int:pk>/', views.RecipeDetail.as_view()),
-	path('recipes/<int:pk>/comments/', views.CommentList.as_view()),
+	path('recipes/<int:pk>/', views.recipe_detail),
+	path('recipes/<int:pk>/comments/', views.recipe_comments),
 ] 
