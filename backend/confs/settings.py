@@ -35,6 +35,8 @@ INSTALLED_APPS = [
     'recipes.apps.RecipesConfig',
     'users.apps.UsersConfig',
 
+    # for defining the appropriate headers for sharing
+    'corsheaders',
     # 3rd party apps
     'rest_framework',
     # for handling tokenized & session authentication
@@ -54,6 +56,8 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -148,3 +152,7 @@ REST_FRAMEWORK = {
 }
 
 # cors settings
+# allowed consumers
+CORS_WHITE_LIST = [
+    'http://localhost:3000',
+]
