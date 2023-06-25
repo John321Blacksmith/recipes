@@ -64,7 +64,7 @@ class RecipeDetail(APIView):
 		"""
 		recipe = self.get_object(pk)
 		if request.user == recipe.author:
-			serializer = RecipeSerializer(data=request.data)
+			serializer = RecipeSerializer(recipe, data=request.data)
 			if serializer.is_valid():
 				serializer.save()
 				return Response(serializer.data, status.HTTP_201_CREATED)
