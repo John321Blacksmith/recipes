@@ -1,24 +1,26 @@
+from django.http import Http404
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from .models import Recipe, Comment
+from rest_framework.views import APIView
 from .serializers import RecipeSerializer, CommentSerializer
+from .models import Recipe, Comment
 # Create your views here.
 
 
-@api_view(['GET', 'POST'])
-def recipe_list(request, format=None):
+class RecipeList(APIView):
 	"""
-	This view performs extraction
-	of all the recipes from the DB.
+	This API collection endpoint
+	enables GET and POST methods
+	to get a list of the recipes
+	and to create a new one.
 	"""
 
-	if request.method == 'GET':
+	def get(self, request, format=None):
 		recipes = Recipe.objects.all()
 		serializer = RecipeSerializer(recipes, many=True)
 		return Response(serializer.data)
 
-	elif request.method == 'POST':
+	def post(self, request, format=None):
 		serializer = RecipeSerializer(data=request.data)
 		if serializer.is_valid():
 			serializer.save()
@@ -26,24 +28,42 @@ def recipe_list(request, format=None):
 		return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
-def recipe_detail(request, pk, format=None):
+class RecipeDetail(APIView):
 	"""
-	This view uses a parsed index
-	of each pecipe and facilitates
-	an object api endpoint.
+	This API instance endpoint
+	caries read, update and delete
+	functionality.
 	"""
-	try:
-		recipe = Recipe.objects.get(pk=pk)
-	except Recipe.DoesNotExist:
-		return Response(status.HTTP_404_NOT_FOUND)
+	def get_object(self, pk):
+		"""
+		Retrieve an object
+		from the DB via its
+		ID.
+		"""
+		try:
+			recipe = Recipe.objects.get(pk=pk)
+		except Recipe.DoesNotExist:
+			raise Http404
+		return recipe
 
-	if request.method == 'GET':
+	def get(self, request, pk, format=None):
+		"""
+		Enable the API-consumer to 
+		see details with each GET
+		request to this endpoint.
+		"""
+		recipe = self.get_object(pk)
 		serializer = RecipeSerializer(recipe)
 		return Response(serializer.data)
 
-	elif request.method == 'PUT':
-		if request.user == recipe.author or request.user.is_staff:
+	def put(self, request, pk, format=None):
+		"""
+		Enable the consumer to 
+		change the recipe object
+		which is his.
+		"""
+		recipe = self.get_object(pk)
+		if request.user == recipe.author:
 			serializer = RecipeSerializer(data=request.data)
 			if serializer.is_valid():
 				serializer.save()
@@ -51,38 +71,58 @@ def recipe_detail(request, pk, format=None):
 			return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 		else:
 			return Response(status.HTTP_403_FORBIDDEN)
-		
 
-	elif request.method == 'DELETE':
+	def delete(self, request, pk, format=None):
+		"""
+		Enable the consumer to 
+		delete his related recipes.
+		"""
+		recipe = self.get_object(pk)
 		if request.user == recipe.author:
 			recipe.delete()
 			return Response(status.HTTP_204_NO_CONTENT)
 		else:
 			return Response(status.HTTP_403_FORBIDDEN)
 
-		
-@api_view(['GET', 'POST'])
-def recipe_comments(request, pk, format=None):
-	"""
-	This view parses the request to
-	a collection api endpoint and uses
-	a parsed index of recipe to extr
-	act all the related comments.
-	"""
 
-	try:
-		recipe = Recipe.objects.get(pk=pk)
-	except Recipe.DoesNotExist:
-		return Response(status.HTTP_404_NOT_FOUND)
+class RecipeComments(APIView):
+	"""
+	This API endpoint has got
+	both read and create
+	functionality towards
+	a list of comments related
+	to a particular recipe object.
+	"""
+	
+	def get_object(self, pk):
+		"""
+		"""
+		try:
+			recipe = Recipe.objects.get(pk=pk)
+		except Recipe.DoesNotExist:
+			raise Http404
+		return recipe
 
-	if request.method == 'GET':
-		comments = recipe.comment_set.all()
+	def get(self, request, pk, format=None):
+		"""
+		Enable the consumer
+		to see a list of re
+		lated comments.
+		"""
+		recipe = self.get_object(pk)
+		comments = recipe.comment_set.all()  # fetch a list of comments
 		serializer = CommentSerializer(comments, many=True)
 		return Response(serializer.data)
 
-	elif request.method == 'POST':
+	def post(self, request, pk, format=None):
+		"""
+		Enable the consumer to
+		create a new comment
+		instance against others.
+		"""
 		serializer = CommentSerializer(data=request.data)
 		if serializer.is_valid():
 			serializer.save()
 			return Response(serializer.data, status.HTTP_201_CREATED)
 		return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+
