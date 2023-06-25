@@ -9,9 +9,9 @@ from . import views
 app_name = 'recipes'
 
 urlpatterns = [
-	path('recipes/', views.recipe_list),
-	path('recipes/<int:pk>/', views.recipe_detail),
-	path('recipes/<int:pk>/comments/', views.recipe_comments),
+	path('recipes/', views.RecipeList.as_view()),
+	path('recipes/<int:pk>/', views.RecipeDetail.as_view()),
+	path('recipes/<int:pk>/comments/', views.RecipeComments.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
