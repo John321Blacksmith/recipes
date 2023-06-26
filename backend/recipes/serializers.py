@@ -9,9 +9,13 @@ class RecipeSerializer(serializers.ModelSerializer):
 	JSON API.
 	"""
 
+	# assign a comment collection variable for nested
+	# response field
+	comments = serializers.PrimaryKeyRelatedField(many=True, queryset=Comment.objects.all()) 
+
 	class Meta:
 		model = Recipe
-		fields = ('id', 'title', 'date', 'ingredients', 'category', 'instruction', 'author')
+		fields = ('id', 'title', 'date', 'ingredients', 'category', 'instruction', 'author', 'comments')
 
 
 class CommentSerializer(serializers.ModelSerializer):
