@@ -27,7 +27,7 @@ class Comment(models.Model):
 	comment object left from the
 	user.
 	"""
-	author = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE)
+	author = models.ForeignKey('users.CustomUser', related_name='comments', on_delete=models.CASCADE)
 	recipe = models.ForeignKey(Recipe, related_name='comments', on_delete=models.CASCADE) 
 	content = models.TextField()
 	date = models.DateTimeField(auto_now_add=True)
