@@ -110,7 +110,9 @@ class RecipeComments(APIView):
 		lated comments.
 		"""
 		recipe = self.get_object(pk)
-		comments = recipe.comment_set.all()  # fetch a list of comments
+		# since the related name in the Comment model field is 'comments',
+		# to access a set of recipe comments use the 'comments' attribute.
+		comments = recipe.comments.all()  # fetch a list of comments
 		serializer = CommentSerializer(comments, many=True)
 		return Response(serializer.data)
 
