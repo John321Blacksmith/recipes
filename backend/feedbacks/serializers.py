@@ -1,8 +1,7 @@
-from time import sleep
-from django.core.mail import send_mail
 from rest_framework import serializers
+from .tasks import send_feedback_message_task
 
-
+ 
 class FeedBack:
 	"""
 	Feedback message blueprint.
@@ -23,12 +22,9 @@ class FeedbackSerializer(serializers.Serializer):
 	text = serializers.CharField()
 
 	def create(self, validated_data):
-		sleep(10)
-		send_mail(
-				subject=validated_data['subject'],
-				message=f"{validated_data['text']}\n Thank you for your feedback!",
-				from_email="super-recipes.com",
-				recipient_list=[validated_data['email']],
-				fail_silently=False,
+		send_feedback_message_task.delay(
+				validated_data['email'],
+				validated_data['subject'],
+				validated_data['text'],
 			)
 		return FeedBack(**validated_data)
