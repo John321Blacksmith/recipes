@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     # custom apps
     'recipes.apps.RecipesConfig',
     'users.apps.UsersConfig',
+    'feedbacks.apps.FeedbacksConfig',
 
     # for defining the appropriate headers for sharing
     'corsheaders',
@@ -43,6 +44,13 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     # authentication handler
     'dj_rest_auth',
+    # registration endpoint
+    'dj_rest_auth.registration',
+
+    # advanced authorization flow lib
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
 
     # default apps
     'django.contrib.admin',
@@ -51,6 +59,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
 ]
 
 MIDDLEWARE = [
@@ -156,3 +165,13 @@ REST_FRAMEWORK = {
 CORS_WHITE_LIST = [
     'http://localhost:3000',
 ]
+
+
+SITE_ID = 1
+
+# email backend settings
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# celery settings
+CELERY_BROKER_URL = 'redis://localhost:6378'
+CELERY_RESULT_BACKEND = 'redis://localhost:6378'
