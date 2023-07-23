@@ -20,8 +20,10 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/', include('recipes.urls')),
-    path('users/', include('users.urls')),
+    path('api/v1/', include('recipes.urls')), # recipes endpoints root 
+    path('users/', include('users.urls')), # users endpoints root
     path('api-auth/', include('rest_framework.urls')),
-    path('dj-rest-auth/', include('dj_rest_auth.urls')),
+    path('dj-rest-auth/', include('dj_rest_auth.urls')), # main auth flow
+    path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')), # registration endpoint 
+    path('feedback/', include('feedbacks.urls')),
 ]
