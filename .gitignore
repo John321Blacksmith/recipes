@@ -1,4 +1,5 @@
 __pycache__/
+.venv/
 *secrs.py
 *.sqlite3
 Pipfile
