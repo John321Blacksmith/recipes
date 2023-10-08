@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from .serializers import RecipeSerializer, CommentSerializer
 from .models import Recipe, Comment
 # Create your views here.
-
+ 
 
 class RecipeList(APIView):
 	"""
@@ -21,6 +21,11 @@ class RecipeList(APIView):
 		return Response(serializer.data)
 
 	def post(self, request, format=None):
+		"""
+		Create a new recipe if being
+		logged in.
+		"""
+		request.data['author'] = request.user.id # specify a currently logged in user
 		serializer = RecipeSerializer(data=request.data)
 		if serializer.is_valid():
 			serializer.save()
@@ -122,6 +127,8 @@ class RecipeComments(APIView):
 		create a new comment
 		instance against others.
 		"""
+		request.data['author'] = request.user.id
+		request.data['recipe'] = pk
 		serializer = CommentSerializer(data=request.data)
 		if serializer.is_valid():
 			serializer.save()
