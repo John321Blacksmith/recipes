@@ -11,11 +11,11 @@ class RecipeSerializer(serializers.ModelSerializer):
 
 	# assign a comment collection variable for nested
 	# response field
-	comments = serializers.PrimaryKeyRelatedField(many=True, queryset=Comment.objects.all(), required=False) 
+	# comments = serializers.PrimaryKeyRelatedField(many=True, queryset=Comment.objects.all(), required=False)  # the comments field is not convenient for view in a list page
 
 	class Meta:
 		model = Recipe
-		fields = ('id', 'title', 'date', 'ingredients', 'category', 'instruction', 'author', 'comments')
+		fields = ('id', 'title', 'date', 'ingredients', 'category', 'instruction', 'author')
 
 
 class CommentSerializer(serializers.ModelSerializer):
