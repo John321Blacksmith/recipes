@@ -56,6 +56,9 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
 
+    # APIs documentstion
+    'drf_yasg',
+
     # default apps
     'django.contrib.admin',
     'django.contrib.auth',
@@ -168,8 +171,9 @@ REST_FRAMEWORK = {
 
 # cors settings
 # allowed consumers
-CORS_WHITE_LIST = [
-    'http://localhost:3000',
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:8000',
+    'http://localhost:5000',
 ]
 
 
