@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
 
-    # APIs documentstion
+    # APIs documentation
     'drf_yasg',
 
     # default apps

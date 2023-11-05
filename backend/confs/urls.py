@@ -29,7 +29,7 @@ schema_view = get_schema_view(
         contact=openapi.Contact(email="admin@admin.local"),
         license=openapi.License(name="MIT License"),
     ),
-    public=True,
+    public=False,
     permission_classes=[IsAdminUser],
 )
 
@@ -43,6 +43,7 @@ urlpatterns = [
     path('dj-rest-auth/', include('dj_rest_auth.urls')), # main auth flow
     path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')), # registration endpoint 
     path('feedback/', include('feedbacks.urls')),
+  
     # urls for API representation
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),

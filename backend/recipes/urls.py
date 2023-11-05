@@ -11,4 +11,5 @@ urlpatterns = [
 	path('recipes/<int:pk>/comments/', views.RecipeComments.as_view()),
 ]
 
+
 urlpatterns = format_suffix_patterns(urlpatterns)
