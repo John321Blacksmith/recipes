@@ -32,13 +32,16 @@ class Recipe(models.Model):
 		return self.title
 	
 
-class Ingredients(models.Model):
+class IngredientsTable(models.Model):
 	"""
 	This model represents a 
 	dedicated table of
 	ingredients. 
 	"""
-	recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+	recipe = models.OneToOneField(Recipe, related_name='ingredients', primary_key='', on_delete=models.CASCADE)
+
+	class Meta:
+		verbose_name = 'IngredientsTable'
 
 
 class Ingredient(models.Model):
@@ -46,7 +49,7 @@ class Ingredient(models.Model):
 	This model represents a
 	single ingredient.
 	"""
-	ingredients = models.ForeignKey(Ingredients, on_delete=models.CASCADE)
+	ingredients = models.ForeignKey(IngredientsTable, on_delete=models.CASCADE)
 	title = models.CharField(max_length=50)
 	volume = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='amount or volume')
 
