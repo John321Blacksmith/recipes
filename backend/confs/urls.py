@@ -42,7 +42,6 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('dj-rest-auth/', include('dj_rest_auth.urls')), # main auth flow
     path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')), # registration endpoint 
-    path('feedback/', include('feedbacks.urls')),
   
     # urls for API representation
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
