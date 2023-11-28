@@ -37,8 +37,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # custom apps
     'recipes.apps.RecipesConfig',
-    'users.apps.UsersConfig',
-    'feedbacks.apps.FeedbacksConfig',
+    'users.apps.UsersConfig'
 
     # for defining the appropriate headers for sharing
     'corsheaders',
@@ -182,6 +181,3 @@ SITE_ID = 1
 # email backend settings
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-# celery settings
-CELERY_BROKER_URL = 'redis://localhost:6378'
-CELERY_RESULT_BACKEND = 'redis://localhost:6378'
