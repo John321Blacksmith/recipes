@@ -4,7 +4,7 @@ from . import views
 
 app_name = 'recipes'
 urlpatterns = [
-    path('recipes/', views.MainPageAPIView.as_view()),
-    path('recipes/<str:title>/', views.CategoryRecipesAPIView.as_view()),
-    path('recipes/<int:recipe_id>/', views.RecipeDetailAPIView.as_view()),
+    path('', views.MainPageAPIView.as_view()),
+    path('<str:category>/', views.CategoryRecipesAPIView.as_view()),
+    path('<int:recipe_id>/', views.RecipeDetailAPIView.as_view()),
 ]
