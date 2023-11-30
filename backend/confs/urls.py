@@ -37,7 +37,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/', include('recipes.urls')), # recipes endpoints root 
+    path('recipes/', include('recipes.urls')), # recipes endpoints root 
     path('users/', include('users.urls')), # users endpoints root
     path('api-auth/', include('rest_framework.urls')),
     path('dj-rest-auth/', include('dj_rest_auth.urls')), # main auth flow
