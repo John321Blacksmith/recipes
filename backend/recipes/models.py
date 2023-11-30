@@ -14,7 +14,11 @@ class Category(models.Model):
 		verbose_name_plural = 'categories'
 
 	def __str__(self):
-		return self.title
+		return self.title.capitalize()
+
+	def save(self, *args, **kwargs):
+		self.title = self.title.lower()
+		super().save(*args, **kwargs)
 
 
 class Recipe(models.Model):
