@@ -16,8 +16,8 @@ from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-dotenv_path = join(dirname(__file__), '.env')
+# dirname(__file__)
+dotenv_path = join(BASE_DIR, '.env')
 load_dotenv(dotenv_path)
 
 # Quick-start development settings - unsuitable for production
@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     # custom apps
     'recipes.apps.RecipesConfig',
     'users.apps.UsersConfig',
-    'feedbacks.apps.FeedbacksConfig',
 
     # for defining the appropriate headers for sharing
     'corsheaders',
@@ -55,6 +54,9 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+
+    # APIs documentation
+    'drf_yasg',
 
     # default apps
     'django.contrib.admin',
@@ -107,7 +109,7 @@ WSGI_APPLICATION = 'confs.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'test_db.sqlite3',
     }
 }
 
@@ -157,9 +159,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # drf settings
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly', # project-level permission
-    ],
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.IsAuthenticatedOrReadOnly', # project-level permission
+    # ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
@@ -168,8 +170,9 @@ REST_FRAMEWORK = {
 
 # cors settings
 # allowed consumers
-CORS_WHITE_LIST = [
-    'http://localhost:3000',
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:8000',
+    'http://localhost:5000',
 ]
 
 
@@ -178,6 +181,3 @@ SITE_ID = 1
 # email backend settings
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-# celery settings
-CELERY_BROKER_URL = 'redis://localhost:6378'
-CELERY_RESULT_BACKEND = 'redis://localhost:6378'
