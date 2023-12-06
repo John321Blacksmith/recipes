@@ -16,23 +16,26 @@ class CommentSerializer(serializers.ModelSerializer):
 
 class RecipeListSerializer(serializers.ModelSerializer):
     comments_amount = serializers.SerializerMethodField('get_comments_amount')
+    author = serializers.SerializerMethodField('get_author_name')
+    category = serializers.SerializerMethodField('get_cetegory_title')
     class Meta:
         model = Recipe
         fields = [
-            'pk',
             'category',
             'author',
             'title',
-            'description',
             'date_published',
-            'prep_time',
-            'cook_time',
-            'directions',
             'comments_amount'
         ]
     
     def get_comments_amount(self, obj):
         return len(obj.comments.all())
+    
+    def get_author_name(self, obj):
+        return obj.author.username
+    
+    def get_cetegory_title(self, obj):
+        return obj.category.title
     
 
 class RecipeDetailSerializer(serializers.ModelSerializer):
