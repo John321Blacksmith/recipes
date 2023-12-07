@@ -21,6 +21,7 @@ class RecipeListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = [
+            'pk',
             'category',
             'author',
             'title',
