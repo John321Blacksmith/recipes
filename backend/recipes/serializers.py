@@ -61,3 +61,20 @@ class RecipeDetailSerializer(serializers.ModelSerializer):
             dict(comment) for comment in\
                 CommentSerializer(obj.comments.all(), many=True).data
         ]
+        
+
+class RecipeCreationSerializer(serializers.ModelSerializer):
+    """
+    This serializer processes the the fields
+    of the Recipe object used at recipe creation.
+    """
+    
+    class Meta:
+        model = Recipe
+        fields = [
+            'title',
+            'description',
+            'prep_time',
+            'cook_time',
+            'directions'
+        ]
