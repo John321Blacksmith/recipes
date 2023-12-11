@@ -27,8 +27,8 @@ class TestResipeLifeSpan(TestCase):
                                            cook_time=30.0,
                                            directions='testhatprogram'
                                         )
-        cls.test_ing1, cls.test_ing2, cls.test_ing3 = Ingredient(title='Test1'), Ingredient(title='Test2'), Ingredient(title='Test3')
-        cls.not_unique_ing = Ingredient(title='Test2')
+        cls.test_ing1, cls.test_ing2, cls.test_ing3 = Ingredient(title='Ingredient1'), Ingredient(title='Ingredient2'), Ingredient(title='Ingredient3')
+        cls.not_unique_ing = Ingredient(title='Ingredient2')
         
         cls.comment1 = Comment.objects.create(
 			recipe=cls.recipe,
@@ -76,11 +76,12 @@ class TestResipeLifeSpan(TestCase):
         self.assertEqual(self.recipe.prep_time, 10.0)
         self.assertEqual(self.recipe.cook_time, 30.0)
         self.assertEqual(self.recipe.directions, 'testhatprogram')
-        self.assertCountEqual([ 'Test1', 'Test2', 'Test3'], self.ing_titles)
+        self.assertCountEqual([ 'Ingredient1', 'Ingredient2', 'Ingredient3'], self.ing_titles)
         self.assertEqual(len(self.recipe.comments.all()), 2)
     
     def test_category_data(self):
         self.assertEqual(self.recipe.category.title, 'test category')
     
-    def test_ingredients_distinct(self):
-        self.assertNotIn(self.not_unique_ing, self.recipe.ingredients.all())
+    def test_the_ingredient_duplicate_not_created_but_existing_is_appended_to_recipe(self):
+        self.recipe.ingredients.add(self.not_unique_ing)
+        self.assertEqual(set(self.ing_titles), self.ing_titles) # not passed
