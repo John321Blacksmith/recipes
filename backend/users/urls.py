@@ -1,7 +1,8 @@
 from django.urls import path
-from . import views
+from recipes import views
+
 
 app_name = 'users'
 urlpatterns = [ 
-        path('user', views.View)
+        path('profile/new_recipe/', views.RecipeCreationAPIView.as_view()),
     ]
