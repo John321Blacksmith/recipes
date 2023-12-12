@@ -104,14 +104,13 @@ class RecipeCreationAPIView(GenericAPIView):
     serializer_class = RecipeCreationSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     
-    
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
     
     def create(self, request, *args, **kwargs):
+        request.data['author'] = request.user.pk
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status.HTTP_201_CREATED)
         return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
-    
