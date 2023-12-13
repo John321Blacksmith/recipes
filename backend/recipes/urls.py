@@ -8,5 +8,4 @@ urlpatterns = [
     path('<str:category>/', views.CategoryRecipesAPIView.as_view()),
     path('recipes/<int:pk>/', views.RecipeDetailAPIView.as_view()),
     path('recipes/<int:pk>/new_comment', views.CommentCreationAPIView.as_view()),
-    path('new_recipe/', views.RecipeCreationAPIView.as_view())
 ]
