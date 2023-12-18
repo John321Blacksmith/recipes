@@ -149,5 +149,7 @@ class RecipeCreationAPIView(GenericAPIView):
                 # list of the most occurred words, not spaces
                 [w.lower() for w, _ in word_frequency.items() if (_ > 0) and (w != ' ')]
             ]
-            
-        return category_set[0].pk if len(category_set) == 1 else None
+
+        # if the recipe was not recognized, an undefined category object is retrived 
+        return category_set[0].pk if len(category_set) == 1 else Category.objects.get_or_create(id=0, title='undefined')[0]
+    
