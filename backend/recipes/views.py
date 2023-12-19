@@ -110,7 +110,7 @@ class RecipeCreationAPIView(GenericAPIView):
     
     def create(self, request, *args, **kwargs):
         request.data['author'] = request.user.pk
-        request.data['category'] = self.get_category(request.data).pk
+        request.data['category'] = self.get_category(request.data)
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -151,5 +151,5 @@ class RecipeCreationAPIView(GenericAPIView):
             ]
 
         # if the recipe was not recognized, an undefined category object is retrived 
-        return category_set[0].pk if len(category_set) == 1 else Category.objects.get_or_create(id=0, title='undefined')[0]
+        return category_set[0].pk if len(category_set) == 1 else Category.objects.get_or_create(title='diverse')[0].pk
     
