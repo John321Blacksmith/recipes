@@ -110,7 +110,7 @@ class RecipeCreationAPIView(GenericAPIView):
     
     def create(self, request, *args, **kwargs):
         request.data['author'] = request.user.pk
-        request.data['category'] = self.get_category(request.data)
+        request.data['category'] = self.get_category(request.data).pk
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
