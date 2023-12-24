@@ -110,46 +110,8 @@ class RecipeCreationAPIView(GenericAPIView):
     
     def create(self, request, *args, **kwargs):
         request.data['author'] = request.user.pk
-        request.data['category'] = self.get_category(request.data)
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status.HTTP_201_CREATED)
         return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
-    
-    def get_category(self, request_data: dict):
-        """
-        Scrape the literal data
-        a new object has and
-        define a category it
-        can be best related to.
-        :return: category_pk <int>
-        """
-        # title, directions, description are literal fields
-        
-        # getting the literal data
-        literal_data = ' '.join(val for val in [request_data[key] for key in ['title', 'directions', 'description']])
-        
-        # storage for words occurrencies
-        word_frequency: dict[str, int] = {}
-        
-        # count the words and record results in the dict
-        for word in literal_data.split(' '):
-            if word in [key for key in word_frequency.keys()]:
-                word_frequency[word] = word_frequency[word] + 1
-            else:
-                word_frequency[word] = 1
-            
-        # pick the occurred words from the storage
-        # and check for existance of the categories
-        # with such a title
-        category_set = [
-            # list of categories whose titles are in the 'most_occured' words list
-            obj for obj in Category.objects.all() if obj.title.lower() in\
-                # list of the most occurred words, not spaces
-                [w.lower() for w, _ in word_frequency.items() if (_ > 0) and (w != ' ')]
-            ]
-
-        # if the recipe was not recognized, an undefined category object is retrived 
-        return category_set[0].pk if len(category_set) == 1 else Category.objects.get_or_create(title='diverse')[0].pk
-    
