@@ -71,7 +71,6 @@ class RecipeCreationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = [
-            'category',
             'author',
             'title',
             'description',
