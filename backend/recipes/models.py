@@ -106,10 +106,6 @@ class Ingredient(models.Model):
 
 	def __str__(self):
 		return self.title
-
-	def save(self, *args, **kwargs):
-		if self.title not in [obj['title'] for obj in Ingredient.objects.values('title')]:
-			super().save(*args, **kwargs)
   
  
 class Comment(models.Model):
