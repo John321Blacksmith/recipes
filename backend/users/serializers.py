@@ -8,9 +8,21 @@ class CustomUserSerializer(serializers.ModelSerializer):
 	This instance transforms a user's model
 	to the JSON API.
 	"""
-	# related user's comments
-	comments = serializers.PrimaryKeyRelatedField(many=True, queryset=Comment.objects.all())
-
+	comments_amount = serializers.SerializerMethodField('get_comments_ammount')
+	recipes_amount = serializers.SerializerMethodField('get_recipes_amount')
 	class Meta:
 		model = CustomUser
-		fields = ['id', 'username', 'nickname', 'email', 'comments']
+		fields = [
+			'id', 
+			'username', 
+			'nickname', 
+			'email',
+			'comments_amount', 
+			'recipes_amount'
+		]
+	
+	def get_comments_ammount(self, obj):
+		return len(obj.comments.all())
+
+	def get_recipes_amount(self, obj):
+		return len(obj.recipe_set.all())

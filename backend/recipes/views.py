@@ -1,15 +1,14 @@
-from django.http import Http404
+from django.http import HttpRequest
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework import serializers
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.mixins import ListModelMixin, CreateModelMixin
+from rest_framework.mixins import ListModelMixin
 from rest_framework.renderers import JSONRenderer
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import Category, Recipe, Comment
-from .serializers import RecipeListSerializer, RecipeDetailSerializer, CommentSerializer
+from .models import Category, Recipe
+from .serializers import RecipeListSerializer, RecipeDetailSerializer, CommentSerializer, RecipeCreationSerializer
 
 
 class MainPageAPIView(ListAPIView):
@@ -90,6 +89,27 @@ class CommentCreationAPIView(GenericAPIView):
         return self.create(request, *args, **kwargs)
     
     def create(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status.HTTP_201_CREATED)
+        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+    
+
+class RecipeCreationAPIView(GenericAPIView):
+    """
+    Ths view provides a Recipe creation form
+    and processes the form data.
+    """
+    queryset = Recipe.objects.all()
+    serializer_class = RecipeCreationSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+    
+    def create(self, request, *args, **kwargs):
+        request.data['author'] = request.user.pk
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
